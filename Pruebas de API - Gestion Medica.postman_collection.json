@@ -1,0 +1,1532 @@
+{
+	"info": {
+		"_postman_id": "3649799b-59ab-4f1b-a626-dce939945c18",
+		"name": "Pruebas de API - Gestion Medica",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33218963",
+		"_collection_link": "https://unsa99.postman.co/workspace/hospital_system~a222e383-81fd-4809-8d57-427cdb39d703/collection/33218963-3649799b-59ab-4f1b-a626-dce939945c18?action=share&source=collection_link&creator=33218963"
+	},
+	"item": [
+		{
+			"name": "Gestion de citas",
+			"item": [
+				{
+					"name": "Registrar citas medicas",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"if (!pm.variables.get(\"paciente_id\")) {\r",
+									"    pm.variables.set(\"paciente_id\", \"1\");\r",
+									"}\r",
+									"if (!pm.variables.get(\"profesional_id\")) {\r",
+									"    pm.variables.set(\"profesional_id\", \"1\");\r",
+									"}\r",
+									"if (!pm.variables.get(\"especialidad_id\")) {\r",
+									"    pm.variables.set(\"especialidad_id\", \"2\");\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"let jsonData = pm.response.json();\r",
+									"pm.collectionVariables.set(\"cita_id\", jsonData.id);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"paciente_id\": \"{{paciente_id}}\",\r\n  \"profesional_id\": \"{{profesional_id}}\",\r\n  \"especialidad_id\": \"{{especialidad_id}}\",\r\n  \"fecha\": \"2025-07-22\",\r\n  \"hora\": \"10:30\",\r\n  \"motivo\": \"Dolor de cabeza\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/citas",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"citas"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Consultar citas por paciente",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"if (!pm.variables.get(\"paciente_id\")) {\r",
+									"    throw new Error(\"paciente_id no está definido.\");\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Respuesta contiene lista de citas\", function () {\r",
+									"    let jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.length).to.be.above(0);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/citas/paciente/{{paciente_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"citas",
+								"paciente",
+								"{{paciente_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Consultar citas por especialista",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"if (!pm.variables.get(\"profesional_id\")) {\r",
+									"    throw new Error(\"profesional_id no está definido.\");\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/citas/profesional/{{profesional_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"citas",
+								"profesional",
+								"{{profesional_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cancelar cita",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"if (!pm.variables.get(\"cita_id\")) {\r",
+									"    throw new Error(\"cita_id no está definido.\");\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {\r",
+									"    pm.response.to.have.status(204);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/citas/{{cita_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"citas",
+								"{{cita_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Notificar cita al paciente",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"if (!pm.variables.get(\"cita_id\")) {\r",
+									"    throw new Error(\"cita_id no está definido.\");\r",
+									"}\r",
+									"if (!pm.variables.get(\"correo\")) {\r",
+									"    throw new Error(\"cita_id no está definido.\");\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Notificación enviada\", function () {\r",
+									"    let jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.mensaje).to.include(\"enviado\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"correo\": {{correo}}\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/citas/{{cita_id}}/notificar",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"citas",
+								"{{cita_id}}",
+								"notificar"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Historia clinica",
+			"item": [
+				{
+					"name": "Registrar atención médica",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"if (!pm.variables.get(\"paciente_id\")) {\r",
+									"    pm.variables.set(\"paciente_id\", \"1\");\r",
+									"}\r",
+									"if (!pm.variables.get(\"profesional_id\")) {\r",
+									"    pm.variables.set(\"profesional_id\", \"1\");"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let response = pm.response.json();\r",
+									"if (response.atencion_id) {\r",
+									"    pm.environment.set(\"atencion_id\", response.atencion_id);\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"paciente_id\": \"{{paciente_id}}\",\r\n  \"profesional_id\": \"{{profesional_id}}\",\r\n  \"sintomas\": \"Dolor de cabeza, fiebre\",\r\n  \"diagnostico\": \"Gripe\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/historia_clinica/atencion",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"historia_clinica",
+								"atencion"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Registrar prescripción médica",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let response = pm.response.json();\r",
+									"if (response.receta_id) {\r",
+									"    pm.environment.set(\"receta_id\", response.receta_id);\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"atencion_id\": \"{{atencion_id}}\",\r\n  \"medicamentos\": [\r\n    {\r\n      \"nombre\": \"Paracetamol\",\r\n      \"dosis\": \"500mg\",\r\n      \"frecuencia\": \"Cada 8 horas por 5 días\"\r\n    },\r\n    {\r\n      \"nombre\": \"Vitamina C\",\r\n      \"dosis\": \"1000mg\",\r\n      \"frecuencia\": \"Una vez al día\"\r\n    }\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/receta",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"receta"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Adjuntar resultados complementarios",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let response = pm.response.json();\r",
+									"if (response.examen_id) {\r",
+									"    pm.environment.set(\"examen_id\", response.examen_id);\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "atencion_id",
+									"value": "{{atencion_id}}",
+									"type": "text"
+								},
+								{
+									"key": "descripcion",
+									"value": "\"Hemograma completo\"",
+									"type": "text"
+								},
+								{
+									"key": "archivo",
+									"type": "file",
+									"src": "postman-cloud:///1f066b51-0839-4d20-b432-6fe43af0eabb"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/historia_clinica/examen",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"historia_clinica",
+								"examen"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cerrar historia clínica",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let response = pm.response.json();\r",
+									"pm.test(\"Historia clínica cerrada correctamente\", function () {\r",
+									"    pm.expect(response.mensaje).to.include(\"cerrada\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"estado\": \"cerrado\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/historia_clinica/cerrar/{{atencion_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"historia_clinica",
+								"cerrar",
+								"{{atencion_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Sistema de disponibilidad Medica",
+			"item": [
+				{
+					"name": "Consultar disponibilidad por profesional / especialidad",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"if (!pm.environment.get(\"profesional_id\") || !pm.environment.get(\"especialidad_id\")) {\r",
+									"    console.warn(\"Faltan profesional_id o especialidad_id.\");\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Código de estado 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Devuelve array de horarios\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(Array.isArray(jsonData)).to.be.true;\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/disponibilidad?profesional_id={{profesional_id}}&especialidad_id={{especialidad_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"disponibilidad"
+							],
+							"query": [
+								{
+									"key": "profesional_id",
+									"value": "{{profesional_id}}"
+								},
+								{
+									"key": "especialidad_id",
+									"value": "{{especialidad_id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Consultar agenda del médico (agenda completa)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"if (!pm.environment.get(\"profesional_id\")) {\r",
+									"    console.warn(\"La variable 'profesional_id' no está definida.\");\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Agenda del médico obtenida correctamente\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.expect(pm.response.json()).to.have.property(\"agenda\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/agenda?profesional_id={{profesional_id}}",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"agenda"
+							],
+							"query": [
+								{
+									"key": "profesional_id",
+									"value": "{{profesional_id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verificar días y turnos disponibles",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"if (!pm.environment.get(\"profesional_id\")) {\r",
+									"    console.warn(\"La variable 'profesional_id' no está configurada.\");\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Días y turnos disponibles obtenidos\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.expect(pm.response.json()).to.be.an(\"array\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/disponibilidad/dias?profesional_id={{profesional_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"disponibilidad",
+								"dias"
+							],
+							"query": [
+								{
+									"key": "profesional_id",
+									"value": "{{profesional_id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Crear horario disponible",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"if (!pm.environment.get(\"profesional_id\")) {\r",
+									"    console.warn(\"La variable 'profesional_id' no está configurada.\");\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Horario creado exitosamente\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"profesional_id\": \"{{profesional_id}}\",\r\n  \"fecha\": \"2025-08-01\",\r\n  \"hora_inicio\": \"09:00\",\r\n  \"hora_fin\": \"12:00\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/disponibilidad",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"disponibilidad"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Bloquear horario",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"if (!pm.environment.get(\"profesional_id\")) {\r",
+									"    console.warn(\"La variable 'profesional_id' no está configurada.\");\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Horario bloqueado exitosamente\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"profesional_id\": \"{{profesional_id}}\",\r\n  \"fecha\": \"2025-08-01\",\r\n  \"hora_inicio\": \"10:00\",\r\n  \"hora_fin\": \"11:00\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/disponibilidad/bloquear",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"disponibilidad",
+								"bloquear"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Liberar horario",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"if (!pm.environment.get(\"profesional_id\")) {\r",
+									"    console.warn(\"La variable 'profesional_id' no está configurada.\");\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Horario liberado exitosamente\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"profesional_id\": \"{{profesional_id}}\",\r\n  \"fecha\": \"2025-08-01\",\r\n  \"hora_inicio\": \"10:00\",\r\n  \"hora_fin\": \"11:00\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/disponibilidad/liberar",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"disponibilidad",
+								"liberar"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Sincronizar con citas (marcar horario ocupado)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"if (!pm.environment.get(\"cita_id\")) {\r",
+									"    console.warn(\"La variable cita_id no está definida.\");\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Horario marcado como ocupado\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"cita_id\": \"{{cita_id}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/disponibilidad/sincronizar",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"disponibilidad",
+								"sincronizar"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar estado en tiempo real",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"if (!pm.environment.get(\"profesional_id\")) {\r",
+									"    console.warn(\"La variable 'profesional_id' no está configurada.\");\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Estado actualizado correctamente\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/isponibilidad/estado-tiempo-real?profesional_id={{profesional_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"isponibilidad",
+								"estado-tiempo-real"
+							],
+							"query": [
+								{
+									"key": "profesional_id",
+									"value": "{{profesional_id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Sistema de Prescripciones",
+			"item": [
+				{
+					"name": "Crear Nueva Receta",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"if (!pm.variables.get(\"paciente_id\") || !pm.variables.get(\"profesional_id\")) {\r",
+									"    pm.environment.set(\"error\", \"Faltan IDs requeridos: paciente_id o profesional_id.\");\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {\r",
+									"    const json = pm.response.json();\r",
+									"    pm.collectionVariables.set(\"prescripcion_id\", json.id);\r",
+									"    pm.test(\"Receta creada correctamente\", () => {\r",
+									"        pm.expect(json).to.have.property(\"id\");\r",
+									"    });\r",
+									"} else {\r",
+									"    pm.test(\"Error al crear receta\", () => {\r",
+									"        pm.expect(pm.response.code).to.equal(201);\r",
+									"    });\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"paciente_id\": \"{{paciente_id}}\",\r\n  \"profesional_id\": \"{{profesional_id}}\",\r\n  \"especialidad_id\": \"{{especialidad_id}}\",\r\n  \"instrucciones\": \"Tomar después de las comidas\",\r\n  \"medicamentos\": []\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/prescripciones",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"prescripciones"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Seleccionar medicamentos",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Medicamentos añadidos correctamente\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.expect(pm.response.text()).to.include(\"añadidos\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"medicamentos\": [\r\n    {\r\n      \"nombre\": \"Paracetamol\",\r\n      \"dosis\": \"500mg\",\r\n      \"frecuencia\": \"Cada 8 horas\",\r\n      \"duracion\": \"5 días\"\r\n    },\r\n    {\r\n      \"nombre\": \"Ibuprofeno\",\r\n      \"dosis\": \"400mg\",\r\n      \"frecuencia\": \"Cada 12 horas\",\r\n      \"duracion\": \"3 días\"\r\n    }\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/prescripciones/{{prescripcion_id}}/medicamentos",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"prescripciones",
+								"{{prescripcion_id}}",
+								"medicamentos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Validar Prescripción",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Prescripción validada correctamente\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    const json = pm.response.json();\r",
+									"    pm.expect(json).to.have.property(\"interacciones_validas\");\r",
+									"    pm.expect(json.interacciones_validas).to.eql(true);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/prescripciones/{{prescripcion_id}}/validar",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"prescripciones",
+								"{{prescripcion_id}}",
+								"validar"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Enviar Receta a Farmacia",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Receta enviada a farmacia correctamente\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.expect(pm.response.text()).to.include(\"enviada\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"prescripcion_id\": \"{{prescripcion_id}}\",\r\n  \"correo\": \"{{correo}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/farmacia/recetas",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"farmacia",
+								"recetas"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Derivaciones medicas",
+			"item": [
+				{
+					"name": "Crear Hoja de Referencia",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const hoy = new Date();\r",
+									"pm.variables.set(\"fecha_derivacion\", hoy.toISOString().split(\"T\")[0]);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"pm.environment.set(\"derivacion_id\", jsonData.id);\r",
+									"pm.test(\"Se creó la hoja de referencia exitosamente\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"paciente_id\": \"{{paciente_id}}\",\r\n  \"profesional_id\": \"{{profesional_id}}\",\r\n  \"especialidad_destino_id\": \"{{especialidad_id}}\",\r\n  \"motivo\": \"Consulta especializada por resultado de análisis\",\r\n  \"fecha\": \"2025-07-22\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/derivaciones",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"derivaciones"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Selección de Servicio Receptor",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Servicio receptor asignado correctamente\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"especialidad_id\": \"{{especialidad_id}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/derivaciones/{{derivacion_id}}/servicio",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"derivaciones",
+								"{{derivacion_id}}",
+								"servicio"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verificación de Diagnóstico y Cobertura",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"pm.test(\"Diagnóstico y cobertura verificados\", function () {\r",
+									"    pm.expect(jsonData.diagnostico_valido).to.eql(true);\r",
+									"    pm.expect(jsonData.cobertura_valida).to.eql(true);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/derivaciones/{{derivacion_id}}/validar",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"derivaciones",
+								"{{derivacion_id}}",
+								"validar"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Registrar Respuesta del Receptor",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Respuesta del receptor registrada correctamente\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"estado\": \"aceptado\",\r\n  \"observaciones\": \"Paciente agendado para consulta el próximo martes\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/derivaciones/{{derivacion_id}}/respuesta",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"derivaciones",
+								"{{derivacion_id}}",
+								"respuesta"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Notificar al Paciente",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Notificación enviada al paciente\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"correo\": \"{{correo}}\",\r\n  \"asunto\": \"Derivación Médica\",\r\n  \"mensaje\": \"Estimado paciente, su derivación ha sido aceptada y se le ha programado una cita próximamente.\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/notificaciones",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"notificaciones"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Gestión de Egresos",
+			"item": [
+				{
+					"name": "Evaluar condición médica",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"console.log(\"Evaluando condición médica del paciente:\", pm.environment.get(\"paciente_id\"));"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {\r",
+									"    console.log(\"Evaluación médica obtenida correctamente.\");\r",
+									"} else {\r",
+									"    console.error(\"Error al evaluar condición médica.\");\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/egresos/evaluacion/{{paciente_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"egresos",
+								"evaluacion",
+								"{{paciente_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Ejecutar alta médica",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"console.log(\"Ejecutando alta médica para paciente:\", pm.environment.get(\"paciente_id\"));"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let res = pm.response.json();\r",
+									"if (pm.response.code === 201) {\r",
+									"    pm.environment.set(\"egreso_id\", res.id);\r",
+									"    console.log(\"Alta registrada con ID:\", res.id);\r",
+									"} else {\r",
+									"    console.error(\"Error al registrar el alta.\");\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"paciente_id\": \"{{paciente_id}}\",\r\n  \"fecha_alta\": \"2025-07-22\",\r\n  \"observaciones\": \"Paciente estable, sin complicaciones.\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/egresos/alta",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"egresos",
+								"alta"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Generar hoja de referencia",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"console.log(\"Generando hoja de referencia para egreso:\", pm.environment.get(\"egreso_id\"));"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {\r",
+									"    console.log(\"Hoja de referencia creada correctamente.\");\r",
+									"} else {\r",
+									"    console.error(\"Error al crear hoja de referencia.\");\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"destino\": \"Hospital Nacional\",\r\n  \"motivo\": \"Seguimiento especializado\",\r\n  \"fecha_referencia\": \"2025-07-23\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/egresos/{{egreso_id}}/referencia",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"egresos",
+								"{{egreso_id}}",
+								"referencia"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Notificar egreso",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"console.log(\"Notificando egreso del paciente asociado a egreso:\", pm.environment.get(\"egreso_id\"));\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {\r",
+									"    console.log(\"Notificación enviada correctamente.\");\r",
+									"} else {\r",
+									"    console.error(\"Error al enviar la notificación.\");\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"correo\": {{correo}},\r\n  \"mensaje\": \"Su egreso ha sido registrado. Adjuntamos su constancia.\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/egresos/{{egreso_id}}/notificar",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"egresos",
+								"{{egreso_id}}",
+								"notificar"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
