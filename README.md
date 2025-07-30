@@ -115,6 +115,9 @@ hospital_system/
     └── template.html                   # Frontend básico
 ```
 
+## ✅ Pruebas de calidad de código (SonarLint)
+![agenda_cita_sonar](docs/screenshots/agenda_cita_sonar.jpeg)
+
 ## 🛠️ Tecnologías
 
 ### Backend
