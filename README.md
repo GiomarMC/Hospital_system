@@ -115,6 +115,9 @@ hospital_system/
     └── template.html                   # Frontend básico
 ```
 
+## 🚀 Pruebas de calidad
+Se utilizó **SonarQube** para verificar la calidad del código en los módulos recién implementados.
+
 ## 🛠️ Tecnologías
 
 ### Backend
